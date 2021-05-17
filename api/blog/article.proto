@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package api.blog;
+
+import "validate/validate.proto";
+
+option go_package = "blog/api/blog;blog";
+option java_multiple_files = true;
+option java_package = "api.blog";
+
+service Article {
+    rpc CreateArticle (CreateArticleRequest) returns (CreateArticleReply);
+    rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleReply);
+    rpc DeleteArticle (DeleteArticleRequest) returns (DeleteArticleReply);
+    rpc GetArticle (GetArticleRequest) returns (GetArticleReply);
+    rpc ListArticle (ListArticleRequest) returns (ListArticleReply);
+}
+
+message CreateArticleRequest {
+    int64 id = 1;
+    string title = 2[(validate.rules).string.max_len = 20];
+    string content = 3[(validate.rules).string.max_len = 99999];
+    int64 created_by = 4;
+    int64 updated_by = 5;
+    int64 type = 6[(validate.rules).int64 = {gte: 1, lte: 100}];
+    int64 city_id = 7;
+    string published_at = 8[(validate.rules).timestamp.required = true];
+}
+message CreateArticleReply {
+    string message = 1;
+}
+
+message UpdateArticleRequest {}
+message UpdateArticleReply {}
+
+message DeleteArticleRequest {}
+message DeleteArticleReply {}
+
+message GetArticleRequest {}
+message GetArticleReply {}
+
+message ListArticleRequest {}
+message ListArticleReply {}
