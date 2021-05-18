@@ -2,8 +2,6 @@ package biz
 
 import (
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
-	"time"
 )
 
 type Article struct {
@@ -15,8 +13,8 @@ type Article struct {
 	Type int64
 	CityId int64
 	PublishedAt string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt string
+	UpdatedAt string
 }
 
 type ArticleRepo interface {
@@ -26,11 +24,10 @@ type ArticleRepo interface {
 
 type ArticleUsecase struct {
 	repo ArticleRepo
-	log  *log.Helper
 }
 
-func NewArticleUsecase(repo ArticleRepo, logger log.Helper) *ArticleUsecase {
-	return &ArticleUsecase{repo: repo, log: log.NewHelper("usecase/article", &logger)}
+func NewArticleUsecase(repo ArticleRepo) *ArticleUsecase {
+	return &ArticleUsecase{repo: repo}
 }
 
 func (uc *ArticleUsecase) Create(ctx context.Context, a *Article) error {

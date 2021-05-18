@@ -1,23 +1,22 @@
 
 package service
 
-import(
+import (
+	pb "blog/api/blog"
 	"blog/internal/biz"
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
-
-	pb "blog/api/blog"
 )
 
 type ArticleService struct {
 	pb.UnimplementedArticleServer
 
 	uc *biz.ArticleUsecase
-	log log.Logger
 }
 
-func NewArticleService(uc *biz.ArticleUsecase, logger log.Logger) *ArticleService {
-	return &ArticleService{uc: uc, log: log.NewHelper("service/greeter", logger)}
+func NewArticleService(uc *biz.ArticleUsecase) *ArticleService {
+	return &ArticleService{
+		uc: uc,
+	}
 }
 
 func (s *ArticleService) CreateArticle(ctx context.Context, req *pb.CreateArticleRequest) (*pb.CreateArticleReply, error) {
@@ -28,6 +27,7 @@ func (s *ArticleService) CreateArticle(ctx context.Context, req *pb.CreateArticl
 		CreatedBy: req.GetCreatedBy(),
 		UpdatedBy: req.GetUpdatedBy(),
 		PublishedAt: req.GetPublishedAt(),
+		CityId: req.GetCityId(),
 	})
 	return &pb.CreateArticleReply{Message: "OK" + req.GetTitle()}, err
 }

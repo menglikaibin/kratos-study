@@ -36,6 +36,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, article *ser
 		),
 	)
 	srv.HandlePrefix("/helloword", v1.NewGreeterHandler(greeter, m))
-	srv.HandlePrefix("/articles", blog.NewArticleHandler(article, m))
+	srv.HandlePrefix("/api.blog.Article", blog.NewArticleHandler(article, m))
 	return srv
 }

@@ -3,18 +3,16 @@ package data
 import (
 	"blog/internal/biz"
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
+	"time"
 )
 
 type articleRepo struct {
 	data *Data
-	logger *log.Helper
 }
 
-func NewArticleRepo(data *Data, logger *log.Helper) biz.ArticleRepo {
+func NewArticleRepo(data *Data) biz.ArticleRepo {
 	return &articleRepo{
 		data: data,
-		logger: log.NewHelper("data/article", logger),
 	}
 }
 
@@ -26,9 +24,11 @@ func (a *articleRepo) CreateArticle(ctx context.Context, article *biz.Article) e
 		SetCreatedBy(article.CreatedBy).
 		SetUpdatedBy(article.UpdatedBy).
 		SetCityID(article.CityId).
+		SetPublishedAt(time.Now()).
+		SetType(article.Type).
 		Save(ctx)
 
-	return err;
+	return err
 }
 
 func (a *articleRepo) UpdateArticle(ctx context.Context, article *biz.Article) error {

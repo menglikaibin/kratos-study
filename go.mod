@@ -3,10 +3,11 @@ module blog
 go 1.15
 
 require (
-	entgo.io/ent v0.8.0 // indirect
-	github.com/envoyproxy/protoc-gen-validate v0.6.1 // indirect
+	entgo.io/ent v0.8.0
+	github.com/envoyproxy/protoc-gen-validate v0.6.1
 	github.com/go-kratos/kratos/cmd/protoc-gen-go-errors v0.0.0-20210217095515-c4e4aa563867 // indirect
 	github.com/go-kratos/kratos/v2 v2.0.0-beta4
+	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
 	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
 	github.com/imdario/mergo v0.3.11 // indirect

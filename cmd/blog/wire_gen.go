@@ -15,21 +15,27 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
+import (
+	_ "github.com/go-sql-driver/mysql"
+)
+
 // Injectors from wire.go:
 
 // initApp init kratos application.
 func initApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	dataData, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	greeterRepo := data.NewGreeterRepo(dataData, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	articleRepo := data.NewArticleRepo(dataData)
+	articleUsecase := biz.NewArticleUsecase(articleRepo)
+	articleService := service.NewArticleService(articleUsecase)
+	httpServer := server.NewHTTPServer(confServer, greeterService, articleService, logger)
 	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
 	app := newApp(logger, httpServer, grpcServer)
 	return app, func() {
-		cleanup()
 	}, nil
 }
