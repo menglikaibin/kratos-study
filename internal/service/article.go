@@ -45,10 +45,15 @@ func (s *ArticleService) UpdateArticle(ctx context.Context, req *pb.UpdateArticl
 		CityId: req.GetCityId(),
 		Type: req.GetType(),
 	})
-	return &pb.UpdateArticleReply{}, err
+	return &pb.UpdateArticleReply{
+		Message: "编辑成功",
+	}, err
 }
 func (s *ArticleService) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (*pb.DeleteArticleReply, error) {
-	return &pb.DeleteArticleReply{}, nil
+	err := s.uc.Delete(ctx, &biz.Article{
+		Id: req.GetId(),
+	})
+	return &pb.DeleteArticleReply{}, err
 }
 func (s *ArticleService) GetArticle(ctx context.Context, req *pb.GetArticleRequest) (*pb.GetArticleReply, error) {
 	return &pb.GetArticleReply{}, nil

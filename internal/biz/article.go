@@ -20,6 +20,7 @@ type Article struct {
 type ArticleRepo interface {
 	CreateArticle(context.Context, *Article) error
 	UpdateArticle(context.Context, *Article) error
+	DeleteArticle(context.Context, *Article) error
 }
 
 type ArticleUsecase struct {
@@ -36,4 +37,8 @@ func (uc *ArticleUsecase) Create(ctx context.Context, a *Article) error {
 
 func (uc *ArticleUsecase) Update(ctx context.Context,a *Article) error {
 	return uc.repo.UpdateArticle(ctx, a)
+}
+
+func (uc *ArticleUsecase) Delete(ctx context.Context,a *Article) error {
+	return uc.repo.DeleteArticle(ctx, a)
 }
