@@ -17,7 +17,9 @@ var (
 		{Name: "updated_by", Type: field.TypeInt64, Default: 0},
 		{Name: "type", Type: field.TypeInt64, Default: 0},
 		{Name: "city_id", Type: field.TypeInt64, Default: 0},
-		{Name: "published_at", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 	}
 	// ArticlesTable holds the schema information for the "articles" table.
 	ArticlesTable = &schema.Table{

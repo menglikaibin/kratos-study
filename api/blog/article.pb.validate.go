@@ -43,17 +43,17 @@ func (m *CreateArticleRequest) Validate() error {
 
 	// no validation rules for Id
 
-	if utf8.RuneCountInString(m.GetTitle()) > 20 {
+	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 20 {
 		return CreateArticleRequestValidationError{
 			field:  "Title",
-			reason: "value length must be at most 20 runes",
+			reason: "value length must be between 1 and 20 runes, inclusive",
 		}
 	}
 
-	if utf8.RuneCountInString(m.GetContent()) > 99999 {
+	if l := utf8.RuneCountInString(m.GetContent()); l < 1 || l > 99999 {
 		return CreateArticleRequestValidationError{
 			field:  "Content",
-			reason: "value length must be at most 99999 runes",
+			reason: "value length must be between 1 and 99999 runes, inclusive",
 		}
 	}
 
@@ -68,12 +68,10 @@ func (m *CreateArticleRequest) Validate() error {
 		}
 	}
 
-	// no validation rules for CityId
-
-	if m.GetPublishedAt() == "" {
+	if val := m.GetCityId(); val < 1 || val > 999 {
 		return CreateArticleRequestValidationError{
-			field:  "PublishedAt",
-			reason: "value is required",
+			field:  "CityId",
+			reason: "value must be inside range [1, 999]",
 		}
 	}
 
@@ -229,6 +227,22 @@ func (m *UpdateArticleRequest) Validate() error {
 		}
 	}
 
+	// no validation rules for UpdatedBy
+
+	if val := m.GetType(); val < 1 || val > 100 {
+		return UpdateArticleRequestValidationError{
+			field:  "Type",
+			reason: "value must be inside range [1, 100]",
+		}
+	}
+
+	if val := m.GetCityId(); val < 1 || val > 999 {
+		return UpdateArticleRequestValidationError{
+			field:  "CityId",
+			reason: "value must be inside range [1, 999]",
+		}
+	}
+
 	return nil
 }
 
@@ -365,6 +379,8 @@ func (m *DeleteArticleRequest) Validate() error {
 		return nil
 	}
 
+	// no validation rules for Id
+
 	return nil
 }
 
@@ -431,6 +447,8 @@ func (m *DeleteArticleReply) Validate() error {
 	if m == nil {
 		return nil
 	}
+
+	// no validation rules for Message
 
 	return nil
 }
@@ -499,6 +517,8 @@ func (m *GetArticleRequest) Validate() error {
 		return nil
 	}
 
+	// no validation rules for UserId
+
 	return nil
 }
 
@@ -566,6 +586,21 @@ func (m *GetArticleReply) Validate() error {
 		return nil
 	}
 
+	for idx, item := range m.GetArticles() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetArticleReplyValidationError{
+					field:  fmt.Sprintf("Articles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -623,20 +658,26 @@ var _ interface {
 	ErrorName() string
 } = GetArticleReplyValidationError{}
 
-// Validate checks the field values on ListArticleRequest with the rules
+// Validate checks the field values on GetArticleReply_Article with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *ListArticleRequest) Validate() error {
+func (m *GetArticleReply_Article) Validate() error {
 	if m == nil {
 		return nil
 	}
 
+	// no validation rules for ArticleId
+
+	// no validation rules for Title
+
+	// no validation rules for Content
+
 	return nil
 }
 
-// ListArticleRequestValidationError is the validation error returned by
-// ListArticleRequest.Validate if the designated constraints aren't met.
-type ListArticleRequestValidationError struct {
+// GetArticleReply_ArticleValidationError is the validation error returned by
+// GetArticleReply_Article.Validate if the designated constraints aren't met.
+type GetArticleReply_ArticleValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -644,24 +685,24 @@ type ListArticleRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListArticleRequestValidationError) Field() string { return e.field }
+func (e GetArticleReply_ArticleValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListArticleRequestValidationError) Reason() string { return e.reason }
+func (e GetArticleReply_ArticleValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListArticleRequestValidationError) Cause() error { return e.cause }
+func (e GetArticleReply_ArticleValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListArticleRequestValidationError) Key() bool { return e.key }
+func (e GetArticleReply_ArticleValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListArticleRequestValidationError) ErrorName() string {
-	return "ListArticleRequestValidationError"
+func (e GetArticleReply_ArticleValidationError) ErrorName() string {
+	return "GetArticleReply_ArticleValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListArticleRequestValidationError) Error() string {
+func (e GetArticleReply_ArticleValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -673,14 +714,14 @@ func (e ListArticleRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListArticleRequest.%s: %s%s",
+		"invalid %sGetArticleReply_Article.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListArticleRequestValidationError{}
+var _ error = GetArticleReply_ArticleValidationError{}
 
 var _ interface {
 	Field() string
@@ -688,69 +729,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListArticleRequestValidationError{}
-
-// Validate checks the field values on ListArticleReply with the rules defined
-// in the proto definition for this message. If any rules are violated, an
-// error is returned.
-func (m *ListArticleReply) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	return nil
-}
-
-// ListArticleReplyValidationError is the validation error returned by
-// ListArticleReply.Validate if the designated constraints aren't met.
-type ListArticleReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListArticleReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListArticleReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListArticleReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListArticleReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListArticleReplyValidationError) ErrorName() string { return "ListArticleReplyValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ListArticleReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListArticleReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListArticleReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListArticleReplyValidationError{}
+} = GetArticleReply_ArticleValidationError{}

@@ -1,10 +1,12 @@
 
 package service
 
-import (
-	pb "blog/api/blog"
+import(
 	"blog/internal/biz"
 	"context"
+	"time"
+
+	pb "blog/api/blog"
 )
 
 type ArticleService struct {
@@ -26,20 +28,28 @@ func (s *ArticleService) CreateArticle(ctx context.Context, req *pb.CreateArticl
 		Type: req.GetType(),
 		CreatedBy: req.GetCreatedBy(),
 		UpdatedBy: req.GetUpdatedBy(),
-		PublishedAt: req.GetPublishedAt(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 		CityId: req.GetCityId(),
 	})
-	return &pb.CreateArticleReply{Message: "OK" + req.GetTitle()}, err
+
+	return &pb.CreateArticleReply{}, err
 }
 func (s *ArticleService) UpdateArticle(ctx context.Context, req *pb.UpdateArticleRequest) (*pb.UpdateArticleReply, error) {
-	return &pb.UpdateArticleReply{}, nil
+	err := s.uc.Update(ctx, &biz.Article{
+		Id: req.GetId(),
+		Title: req.GetTitle(),
+		Content: req.GetContent(),
+		UpdatedBy: req.GetUpdatedBy(),
+		UpdatedAt: time.Now(),
+		CityId: req.GetCityId(),
+		Type: req.GetType(),
+	})
+	return &pb.UpdateArticleReply{}, err
 }
 func (s *ArticleService) DeleteArticle(ctx context.Context, req *pb.DeleteArticleRequest) (*pb.DeleteArticleReply, error) {
 	return &pb.DeleteArticleReply{}, nil
 }
 func (s *ArticleService) GetArticle(ctx context.Context, req *pb.GetArticleRequest) (*pb.GetArticleReply, error) {
 	return &pb.GetArticleReply{}, nil
-}
-func (s *ArticleService) ListArticle(ctx context.Context, req *pb.ListArticleRequest) (*pb.ListArticleReply, error) {
-	return &pb.ListArticleReply{}, nil
 }

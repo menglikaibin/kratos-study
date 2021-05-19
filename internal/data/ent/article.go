@@ -34,9 +34,15 @@ type Article struct {
 	// CityID holds the value of the "city_id" field.
 	// 测试一哈
 	CityID int64 `json:"city_id,omitempty"`
-	// PublishedAt holds the value of the "published_at" field.
+	// CreatedAt holds the value of the "created_at" field.
 	// 测试一哈
-	PublishedAt time.Time `json:"published_at,omitempty"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	// 测试一哈
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	// 测试一哈
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,7 +54,7 @@ func (*Article) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case article.FieldTitle, article.FieldContent:
 			values[i] = new(sql.NullString)
-		case article.FieldPublishedAt:
+		case article.FieldCreatedAt, article.FieldUpdatedAt, article.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Article", columns[i])
@@ -107,11 +113,24 @@ func (a *Article) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				a.CityID = value.Int64
 			}
-		case article.FieldPublishedAt:
+		case article.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field published_at", values[i])
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				a.PublishedAt = value.Time
+				a.CreatedAt = value.Time
+			}
+		case article.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				a.UpdatedAt = value.Time
+			}
+		case article.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				a.DeletedAt = new(time.Time)
+				*a.DeletedAt = value.Time
 			}
 		}
 	}
@@ -153,8 +172,14 @@ func (a *Article) String() string {
 	builder.WriteString(fmt.Sprintf("%v", a.Type))
 	builder.WriteString(", city_id=")
 	builder.WriteString(fmt.Sprintf("%v", a.CityID))
-	builder.WriteString(", published_at=")
-	builder.WriteString(a.PublishedAt.Format(time.ANSIC))
+	builder.WriteString(", created_at=")
+	builder.WriteString(a.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(a.UpdatedAt.Format(time.ANSIC))
+	if v := a.DeletedAt; v != nil {
+		builder.WriteString(", deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

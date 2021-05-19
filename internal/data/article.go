@@ -3,6 +3,7 @@ package data
 import (
 	"blog/internal/biz"
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -26,7 +27,8 @@ func (a *articleRepo) CreateArticle(ctx context.Context, article *biz.Article) e
 		SetCreatedBy(article.CreatedBy).
 		SetUpdatedBy(article.UpdatedBy).
 		SetCityID(article.CityId).
-		SetPublishedAt(now).
+		SetCreatedAt(now).
+		SetUpdatedAt(now).
 		SetType(article.Type).
 		Save(ctx)
 
@@ -34,5 +36,15 @@ func (a *articleRepo) CreateArticle(ctx context.Context, article *biz.Article) e
 }
 
 func (a *articleRepo) UpdateArticle(ctx context.Context, article *biz.Article) error {
-	panic("implement me")
+	fmt.Print(article.Id)
+	_, err := a.data.db.Article.
+		UpdateOneID(int(article.Id)).
+		SetTitle(article.Title).
+		SetContent(article.Content).
+		SetUpdatedBy(article.UpdatedBy).
+		SetUpdatedAt(article.UpdatedAt).
+		SetType(article.Type).
+		Save(ctx)
+
+	return err
 }

@@ -19,7 +19,9 @@ func (Article) Fields() []ent.Field {
 		field.Int64("updated_by").Default(0).Comment("测试一哈"),
 		field.Int64("type").Default(0).Comment("测试一哈"),
 		field.Int64("city_id").Default(0).Comment("测试一哈"),
-		field.Time("published_at").Comment("测试一哈"),
+		field.Time("created_at").Comment("测试一哈"),
+		field.Time("updated_at").Comment("测试一哈"),
+		field.Time("deleted_at").Nillable().Optional().Comment("测试一哈"),
 	}
 }
 

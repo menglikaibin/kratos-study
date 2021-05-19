@@ -104,9 +104,29 @@ func (ac *ArticleCreate) SetNillableCityID(i *int64) *ArticleCreate {
 	return ac
 }
 
-// SetPublishedAt sets the "published_at" field.
-func (ac *ArticleCreate) SetPublishedAt(t time.Time) *ArticleCreate {
-	ac.mutation.SetPublishedAt(t)
+// SetCreatedAt sets the "created_at" field.
+func (ac *ArticleCreate) SetCreatedAt(t time.Time) *ArticleCreate {
+	ac.mutation.SetCreatedAt(t)
+	return ac
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ac *ArticleCreate) SetUpdatedAt(t time.Time) *ArticleCreate {
+	ac.mutation.SetUpdatedAt(t)
+	return ac
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (ac *ArticleCreate) SetDeletedAt(t time.Time) *ArticleCreate {
+	ac.mutation.SetDeletedAt(t)
+	return ac
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (ac *ArticleCreate) SetNillableDeletedAt(t *time.Time) *ArticleCreate {
+	if t != nil {
+		ac.SetDeletedAt(*t)
+	}
 	return ac
 }
 
@@ -208,8 +228,11 @@ func (ac *ArticleCreate) check() error {
 	if _, ok := ac.mutation.CityID(); !ok {
 		return &ValidationError{Name: "city_id", err: errors.New("ent: missing required field \"city_id\"")}
 	}
-	if _, ok := ac.mutation.PublishedAt(); !ok {
-		return &ValidationError{Name: "published_at", err: errors.New("ent: missing required field \"published_at\"")}
+	if _, ok := ac.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New("ent: missing required field \"created_at\"")}
+	}
+	if _, ok := ac.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New("ent: missing required field \"updated_at\"")}
 	}
 	return nil
 }
@@ -286,13 +309,29 @@ func (ac *ArticleCreate) createSpec() (*Article, *sqlgraph.CreateSpec) {
 		})
 		_node.CityID = value
 	}
-	if value, ok := ac.mutation.PublishedAt(); ok {
+	if value, ok := ac.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: article.FieldPublishedAt,
+			Column: article.FieldCreatedAt,
 		})
-		_node.PublishedAt = value
+		_node.CreatedAt = value
+	}
+	if value, ok := ac.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := ac.mutation.DeletedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldDeletedAt,
+		})
+		_node.DeletedAt = &value
 	}
 	return _node, _spec
 }

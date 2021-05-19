@@ -26,8 +26,6 @@ type ArticleHandler interface {
 
 	GetArticle(context.Context, *GetArticleRequest) (*GetArticleReply, error)
 
-	ListArticle(context.Context, *ListArticleRequest) (*ListArticleReply, error)
-
 	UpdateArticle(context.Context, *UpdateArticleRequest) (*UpdateArticleReply, error)
 }
 
@@ -129,30 +127,6 @@ func NewArticleHandler(srv ArticleHandler, opts ...http1.HandleOption) http.Hand
 			return
 		}
 		reply := out.(*GetArticleReply)
-		if err := h.Encode(w, r, reply); err != nil {
-			h.Error(w, r, err)
-		}
-	}).Methods("POST")
-
-	r.HandleFunc("/api.blog.Article/ListArticle", func(w http.ResponseWriter, r *http.Request) {
-		var in ListArticleRequest
-		if err := h.Decode(r, &in); err != nil {
-			h.Error(w, r, err)
-			return
-		}
-
-		next := func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListArticle(ctx, req.(*ListArticleRequest))
-		}
-		if h.Middleware != nil {
-			next = h.Middleware(next)
-		}
-		out, err := next(r.Context(), &in)
-		if err != nil {
-			h.Error(w, r, err)
-			return
-		}
-		reply := out.(*ListArticleReply)
 		if err := h.Encode(w, r, reply); err != nil {
 			h.Error(w, r, err)
 		}

@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"time"
 )
 
 type Article struct {
@@ -12,9 +13,8 @@ type Article struct {
 	Content string
 	Type int64
 	CityId int64
-	PublishedAt string
-	CreatedAt string
-	UpdatedAt string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type ArticleRepo interface {

@@ -139,9 +139,35 @@ func (au *ArticleUpdate) AddCityID(i int64) *ArticleUpdate {
 	return au
 }
 
-// SetPublishedAt sets the "published_at" field.
-func (au *ArticleUpdate) SetPublishedAt(t time.Time) *ArticleUpdate {
-	au.mutation.SetPublishedAt(t)
+// SetCreatedAt sets the "created_at" field.
+func (au *ArticleUpdate) SetCreatedAt(t time.Time) *ArticleUpdate {
+	au.mutation.SetCreatedAt(t)
+	return au
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (au *ArticleUpdate) SetUpdatedAt(t time.Time) *ArticleUpdate {
+	au.mutation.SetUpdatedAt(t)
+	return au
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (au *ArticleUpdate) SetDeletedAt(t time.Time) *ArticleUpdate {
+	au.mutation.SetDeletedAt(t)
+	return au
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (au *ArticleUpdate) SetNillableDeletedAt(t *time.Time) *ArticleUpdate {
+	if t != nil {
+		au.SetDeletedAt(*t)
+	}
+	return au
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (au *ArticleUpdate) ClearDeletedAt() *ArticleUpdate {
+	au.mutation.ClearDeletedAt()
 	return au
 }
 
@@ -289,11 +315,31 @@ func (au *ArticleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: article.FieldCityID,
 		})
 	}
-	if value, ok := au.mutation.PublishedAt(); ok {
+	if value, ok := au.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: article.FieldPublishedAt,
+			Column: article.FieldCreatedAt,
+		})
+	}
+	if value, ok := au.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldUpdatedAt,
+		})
+	}
+	if value, ok := au.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldDeletedAt,
+		})
+	}
+	if au.mutation.DeletedAtCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Column: article.FieldDeletedAt,
 		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
@@ -427,9 +473,35 @@ func (auo *ArticleUpdateOne) AddCityID(i int64) *ArticleUpdateOne {
 	return auo
 }
 
-// SetPublishedAt sets the "published_at" field.
-func (auo *ArticleUpdateOne) SetPublishedAt(t time.Time) *ArticleUpdateOne {
-	auo.mutation.SetPublishedAt(t)
+// SetCreatedAt sets the "created_at" field.
+func (auo *ArticleUpdateOne) SetCreatedAt(t time.Time) *ArticleUpdateOne {
+	auo.mutation.SetCreatedAt(t)
+	return auo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (auo *ArticleUpdateOne) SetUpdatedAt(t time.Time) *ArticleUpdateOne {
+	auo.mutation.SetUpdatedAt(t)
+	return auo
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (auo *ArticleUpdateOne) SetDeletedAt(t time.Time) *ArticleUpdateOne {
+	auo.mutation.SetDeletedAt(t)
+	return auo
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (auo *ArticleUpdateOne) SetNillableDeletedAt(t *time.Time) *ArticleUpdateOne {
+	if t != nil {
+		auo.SetDeletedAt(*t)
+	}
+	return auo
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (auo *ArticleUpdateOne) ClearDeletedAt() *ArticleUpdateOne {
+	auo.mutation.ClearDeletedAt()
 	return auo
 }
 
@@ -601,11 +673,31 @@ func (auo *ArticleUpdateOne) sqlSave(ctx context.Context) (_node *Article, err e
 			Column: article.FieldCityID,
 		})
 	}
-	if value, ok := auo.mutation.PublishedAt(); ok {
+	if value, ok := auo.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: article.FieldPublishedAt,
+			Column: article.FieldCreatedAt,
+		})
+	}
+	if value, ok := auo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldUpdatedAt,
+		})
+	}
+	if value, ok := auo.mutation.DeletedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: article.FieldDeletedAt,
+		})
+	}
+	if auo.mutation.DeletedAtCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Column: article.FieldDeletedAt,
 		})
 	}
 	_node = &Article{config: auo.config}

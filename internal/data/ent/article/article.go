@@ -19,8 +19,12 @@ const (
 	FieldType = "type"
 	// FieldCityID holds the string denoting the city_id field in the database.
 	FieldCityID = "city_id"
-	// FieldPublishedAt holds the string denoting the published_at field in the database.
-	FieldPublishedAt = "published_at"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the article in the database.
 	Table = "articles"
 )
@@ -34,7 +38,9 @@ var Columns = []string{
 	FieldUpdatedBy,
 	FieldType,
 	FieldCityID,
-	FieldPublishedAt,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
