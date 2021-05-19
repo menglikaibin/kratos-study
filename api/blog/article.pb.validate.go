@@ -69,6 +69,7 @@ func (m *CreateArticleRequest) Validate() error {
 	}
 
 	// no validation rules for CityId
+
 	if m.GetPublishedAt() == "" {
 		return CreateArticleRequestValidationError{
 			field:  "PublishedAt",
@@ -143,6 +144,8 @@ func (m *CreateArticleReply) Validate() error {
 		return nil
 	}
 
+	// no validation rules for Message
+
 	return nil
 }
 
@@ -208,6 +211,22 @@ var _ interface {
 func (m *UpdateArticleRequest) Validate() error {
 	if m == nil {
 		return nil
+	}
+
+	// no validation rules for Id
+
+	if utf8.RuneCountInString(m.GetTitle()) > 50 {
+		return UpdateArticleRequestValidationError{
+			field:  "Title",
+			reason: "value length must be at most 50 runes",
+		}
+	}
+
+	if utf8.RuneCountInString(m.GetContent()) > 9999 {
+		return UpdateArticleRequestValidationError{
+			field:  "Content",
+			reason: "value length must be at most 9999 runes",
+		}
 	}
 
 	return nil
@@ -276,6 +295,8 @@ func (m *UpdateArticleReply) Validate() error {
 	if m == nil {
 		return nil
 	}
+
+	// no validation rules for Message
 
 	return nil
 }

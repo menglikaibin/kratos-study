@@ -17,6 +17,8 @@ func NewArticleRepo(data *Data) biz.ArticleRepo {
 }
 
 func (a *articleRepo) CreateArticle(ctx context.Context, article *biz.Article) error {
+	now := time.Now()
+
 	_, err := a.data.db.Article.
 		Create().
 		SetTitle(article.Title).
@@ -24,7 +26,7 @@ func (a *articleRepo) CreateArticle(ctx context.Context, article *biz.Article) e
 		SetCreatedBy(article.CreatedBy).
 		SetUpdatedBy(article.UpdatedBy).
 		SetCityID(article.CityId).
-		SetPublishedAt(time.Now()).
+		SetPublishedAt(now).
 		SetType(article.Type).
 		Save(ctx)
 

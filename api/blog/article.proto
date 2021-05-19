@@ -30,8 +30,14 @@ message CreateArticleReply {
     string message = 1;
 }
 
-message UpdateArticleRequest {}
-message UpdateArticleReply {}
+message UpdateArticleRequest {
+    int64 id = 1;
+    string title = 2[(validate.rules).string.max_len = 50];
+    string content = 3[(validate.rules).string.max_len = 9999];
+}
+message UpdateArticleReply {
+    string message = 1;
+}
 
 message DeleteArticleRequest {}
 message DeleteArticleReply {}
